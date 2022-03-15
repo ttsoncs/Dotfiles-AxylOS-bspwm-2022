@@ -1,7 +1,0 @@
-#!/bin/env bash
-
-source colors
-
-FONT="Source Code Pro Medium:size=12"
-# script for dwm's dmenu
-dmenu_run -c -l 10 -i -nb "$bg" -nf "$fg" -sb "$altbg" -sf "$fg" -fn "$FONT" -p "Run Command:"
