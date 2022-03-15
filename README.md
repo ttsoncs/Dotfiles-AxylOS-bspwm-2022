@@ -5,6 +5,7 @@
 
 * **OS**: Axyl
 * **WM**: bspwm
+* **Bar**: polybar
 * **Terminal**: Alacritty
 * **Font**: Operator Mono Medium
 * **Workspace font**: Source Han Sans
