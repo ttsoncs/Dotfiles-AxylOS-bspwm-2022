@@ -1,0 +1,8 @@
+#!/bin/env bash
+
+source colors
+
+FONT="Operator Mono Medium:size=13"
+
+# configuration of j4-dmenu-desktop
+j4-dmenu-desktop --no-generic --term="alacritty" --dmenu="dmenu -p 'Run App:' -c -i -l 10 -nb \"$bg\" -nf \"$fg\" -sb \"$altbg\" -sf \"$altfg\" -fn \"$FONT\""

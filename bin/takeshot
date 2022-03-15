@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+## Script to take screenshots with maim
+
+time=$(date +%Y-%m-%d-%I-%M-%S)
+geometry=$(xrandr | head -n1 | cut -d',' -f2 | tr -d '[:blank:],current')
+dir="$(xdg-user-dir PICTURES)/Screenshots"
+file="Screenshot_${time}_${geometry}.png"
+
+# notify
+notify_user () {
+	if [[ -e "$dir/$file" ]]; then
+		dunstify -u low --replace=699 -i /usr/share/icons/Papirus-Dark/symbolic/devices/camera-photo-symbolic.svg "Saved in $dir"
+	else
+		dunstify -u low --replace=699 -i /usr/share/icons/Papirus-Dark/symbolic/devices/camera-photo-symbolic.svg "Screenshot Deleted."
+	fi
+}
+
+# take shots
+shotnow () {
+	cd "${dir}" && maim -u -f png "$file" && viewnior "${dir}"/"$file"
+	notify_user
+}
+
+shotwin () {
+        cd "${dir}" && maim -u -f png -i "$(xdotool getactivewindow)" "$file" && viewnior "${dir}"/"$file"
+	notify_user
+}
+
+shotarea () {
+	cd "${dir}" && maim -u -f png -s -b 2 -c 0.35,0.55,0.85,0.25 -l "$file" && viewnior "${dir}"/"$file"
+	notify_user
+}
+
+if [[ ! -d "$dir" ]]; then
+	mkdir -p "$dir"
+fi
+
+if [[ "$1" == "--now" ]]; then
+	shotnow
+elif [[ "$1" == "--win" ]]; then
+	shotwin
+elif [[ "$1" == "--area" ]]; then
+	shotarea
+else
+	echo -e "Available Options : --now --win --area"
+fi
+
+exit 0
