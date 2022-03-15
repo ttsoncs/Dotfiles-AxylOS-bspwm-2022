@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+## Script To Manage Brightness For Axyl OS.
+
+# Graphics card
+CARD=$(basename "$(find /sys/class/backlight/* | head -n 1)")
+
+# Get brightness
+get_backlight() {
+	if [[ "$CARD" == *"intel_"* ]]; then
+                BNESS=$(xbacklight -get)
+		LIGHT=${BNESS%.*}
+	else
+                LIGHT=$(printf '%s' "$(light -G)" | awk 'BEGIN {FS="."}{print $1}')
+	fi
+	echo "${LIGHT}%"
+}
+
+# Get icons
+get_icon() {
+	backlight="$(get_backlight)"
+	current="${backlight%%%}"
+	if [[ ("$current" -ge "0") && ("$current" -le "20") ]]; then
+		icon='/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-off-symbolic.svg'
+	elif [[ ("$current" -ge "20") && ("$current" -le "40") ]]; then
+		icon='/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-low-symbolic.svg'
+	elif [[ ("$current" -ge "40") && ("$current" -le "60") ]]; then
+		icon='/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-medium-symbolic.svg'
+	elif [[ ("$current" -ge "60") && ("$current" -le "100") ]]; then
+		icon='/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-high-symbolic.svg'
+	fi
+}
+
+# Increase brightness
+inc_backlight() {
+	if [[ "$CARD" == *"intel_"* ]]; then
+		xbacklight -inc 10 && get_icon && dunstify -u low --replace=69 -i "$icon" "Brightness : $(get_backlight)"
+	else
+		light -A 5 && get_icon && dunstify -u low --replace=69 -i "$icon" "Brightness : $(get_backlight)"
+	fi
+}
+
+# Decrease brightness
+dec_backlight() {
+	if [[ "$CARD" == *"intel_"* ]]; then
+		xbacklight -dec 10 && get_icon && dunstify -u low --replace=69 -i "$icon" "Brightness : $(get_backlight)"
+	else
+		light -U 5 && get_icon && dunstify -u low --replace=69 -i "$icon" "Brightness : $(get_backlight)"
+	fi
+}
+
+# Execute accordingly
+if [[ "$1" == "--get" ]]; then
+	get_backlight
+elif [[ "$1" == "--up" ]]; then
+	inc_backlight
+elif [[ "$1" == "--down" ]]; then
+	dec_backlight
+else
+	get_backlight
+fi
