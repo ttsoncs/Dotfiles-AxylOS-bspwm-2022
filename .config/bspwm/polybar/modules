@@ -65,6 +65,7 @@ format-background = ${color.black}
 format-padding = 1
 
 label = %temperature%
+label-foreground = ${color.font}
 
 ramp-0 = 
 ramp-1 = 
