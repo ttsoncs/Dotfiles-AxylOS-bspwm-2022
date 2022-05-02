@@ -30,7 +30,7 @@ offset-y = 0%
 background = ${color.background}
 foreground = ${color.foreground}
 
-radius-top = 1
+radius-top = 0
 radius-bottom = 0.0
 
 line-size = 2
